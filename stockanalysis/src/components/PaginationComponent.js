@@ -2,23 +2,51 @@ import React from 'react';
 import Pagination from 'react-bootstrap/Pagination';
 
 const PaginationComponent = ({ currentPage, changePage, totalPages }) => (
-  <Pagination>
-    <Pagination.First />
-    <Pagination.Prev />
-    <Pagination.Item>{1}</Pagination.Item>
-    <Pagination.Ellipsis />
+  <div style={{ display: 'flex', justifyContent: 'center' }}>
+    <Pagination>
+      <Pagination.First
+        onClick={() => changePage(1)}
+        disabled={currentPage === 1}
+      />
+      <Pagination.Prev
+        onClick={() => changePage(currentPage - 1)}
+        disabled={currentPage === 1}
+      />
+      {currentPage > 3 && <Pagination.Ellipsis disabled />}
 
-    <Pagination.Item>{10}</Pagination.Item>
-    <Pagination.Item>{11}</Pagination.Item>
-    <Pagination.Item active>{12}</Pagination.Item>
-    <Pagination.Item>{13}</Pagination.Item>
-    <Pagination.Item disabled>{14}</Pagination.Item>
+      {currentPage > 2 && (
+        <Pagination.Item onClick={() => changePage(currentPage - 2)}>
+          {currentPage - 2}
+        </Pagination.Item>
+      )}
+      {currentPage > 1 && (
+        <Pagination.Item onClick={() => changePage(currentPage - 1)}>
+          {currentPage - 1}
+        </Pagination.Item>
+      )}
+      <Pagination.Item active>{currentPage}</Pagination.Item>
+      {currentPage < totalPages && (
+        <Pagination.Item onClick={() => changePage(currentPage + 1)}>
+          {currentPage + 1}
+        </Pagination.Item>
+      )}
+      {currentPage < totalPages - 1 && (
+        <Pagination.Item onClick={() => changePage(currentPage + 2)}>
+          {currentPage + 2}
+        </Pagination.Item>
+      )}
 
-    <Pagination.Ellipsis />
-    <Pagination.Item>{20}</Pagination.Item>
-    <Pagination.Next />
-    <Pagination.Last />
-  </Pagination>
+      {currentPage < totalPages - 2 && <Pagination.Ellipsis disabled />}
+      <Pagination.Next
+        disabled={currentPage === totalPages}
+        onClick={() => changePage(currentPage + 1)}
+      />
+      <Pagination.Last
+        disabled={currentPage === totalPages}
+        onClick={() => changePage(totalPages)}
+      />
+    </Pagination>
+  </div>
 );
 
 export default PaginationComponent;
