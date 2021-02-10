@@ -5,7 +5,7 @@ import Papa from 'papaparse';
 import HeadlineComponent from './components/HeadlineComponent';
 import PaginationComponent from './components/PaginationComponent';
 import csvData from './data/csvData';
-import AnalyzeTools from './components/AnalyzeTools';
+import AnalyzeTools from './containers/AnalyzeTools';
 import ButtonComponent from './components/ButtonComponent';
 
 const App = () => {
