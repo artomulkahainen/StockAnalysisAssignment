@@ -34,14 +34,17 @@ const AnalyzeTools = ({ show, close, data }) => {
     objects &&
       objects[0].isBefore(objects[1]) &&
       setStatisticsData(
-        data.filter(
-          (row, index) =>
-            index !== 0 &&
-            dayjs(row[0], 'MM/DD/YYYY').isBetween(
-              objects[0] - 1,
-              objects[1] + 1
-            )
-        )
+        data
+          .filter(
+            (row, index) =>
+              index !== 0 &&
+              dayjs(row[0], 'MM/DD/YYYY').isBetween(
+                objects[0].subtract(1, 'day'),
+                objects[1].add(1, 'day')
+              )
+          )
+          .slice()
+          .reverse()
       );
   };
 
@@ -50,6 +53,8 @@ const AnalyzeTools = ({ show, close, data }) => {
       show={show}
       onHide={() => {
         setStatisticsData(null);
+        setStartDate('');
+        setEndDate('');
         close();
       }}
     >
