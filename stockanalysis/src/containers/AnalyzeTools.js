@@ -3,47 +3,56 @@ import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
 import ButtonComponent from '../components/ButtonComponent';
-import Statistics from '../components/Statistics';
+import Statistics from './Statistics';
 import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
 
 const AnalyzeTools = ({ show, close, data }) => {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
-  const [dayObjects, setDayObjects] = useState([]);
-  const [statisticsData, setStatisticsData] = useState([]);
+  const [statisticsData, setStatisticsData] = useState(null);
 
-  /*const createDayObjectsFromData = () => {
-    return setStatisticsData(
-      data
-        .filter((row, index) => index === 1)
-        .map((row) => dayjs(row[0], 'MM/DD/YYYY'))
-        .filter(
-          (date) => date.isBefore(dayObjects[1]) && date.isAfter(dayObjects[0])
-        )
-    );
-  };*/
+  const createStatisticsData = () => {
+    dayjs.extend(isBetween);
+    setStatisticsData(null);
 
-  const createDayObjects = () => {
-    dayObjects.length > 0 && setDayObjects([]);
-
+    // CONVERT STARTDATE AND ENDDATE INTO DAYJS OBJECTS
     let objects = [
       dayjs(startDate, 'MM/DD/YYYY'),
       dayjs(endDate, 'MM/DD/YYYY')
     ];
 
+    // CHECK IF ANY OBJECT IS NAN OR INVALID
     objects.forEach((object) => {
       if (isNaN(object.$D)) {
-        objects = [];
+        objects = null;
       }
     });
 
-    objects.length > 0 &&
+    // IF OBJECTS ARE VALID AND START DATE IS BEFORE END DATE,
+    // FILTER DATA TO HAVE ONLY DAYS BETWEEN GIVEN START DATE AND END DATE
+    objects &&
       objects[0].isBefore(objects[1]) &&
-      setDayObjects(objects);
+      setStatisticsData(
+        data.filter(
+          (row, index) =>
+            index !== 0 &&
+            dayjs(row[0], 'MM/DD/YYYY').isBetween(
+              objects[0] - 1,
+              objects[1] + 1
+            )
+        )
+      );
   };
 
   return (
-    <Modal show={show} onHide={close}>
+    <Modal
+      show={show}
+      onHide={() => {
+        setStatisticsData(null);
+        close();
+      }}
+    >
       <Modal.Header closeButton>Analyze Tools</Modal.Header>
       <Modal.Body>
         <p>Insert start and end date to get deeper statistics</p>
@@ -60,10 +69,8 @@ const AnalyzeTools = ({ show, close, data }) => {
             onChange={(event) => setEndDate(event.target.value)}
           />
         </InputGroup>
-        <ButtonComponent name="Calculate" click={createDayObjects} />
-        {dayObjects.length > 0 && (
-          <Statistics dayObjects={dayObjects} data={data} />
-        )}
+        <ButtonComponent name="Calculate" click={createStatisticsData} />
+        {statisticsData && <Statistics data={statisticsData} />}
       </Modal.Body>
     </Modal>
   );
