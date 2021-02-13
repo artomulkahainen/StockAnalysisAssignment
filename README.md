@@ -1,1 +1,1 @@
-# StockAnalysisAssignment
+Stock analysis
