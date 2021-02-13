@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Modal from 'react-bootstrap/Modal';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
@@ -22,7 +22,7 @@ const AnalyzeTools = ({ show, close, data }) => {
       dayjs(endDate, 'MM/DD/YYYY')
     ];
 
-    // CHECK IF ANY OBJECT IS NAN OR INVALID
+    // CHECK IF ANY OBJECT IS NAN
     objects.forEach((object) => {
       if (isNaN(object.$D)) {
         objects = null;
@@ -74,7 +74,11 @@ const AnalyzeTools = ({ show, close, data }) => {
             onChange={(event) => setEndDate(event.target.value)}
           />
         </InputGroup>
-        <ButtonComponent name="Calculate" click={createStatisticsData} />
+        <ButtonComponent
+          name="Calculate"
+          click={createStatisticsData}
+          disabled={statisticsData}
+        />
         {statisticsData && <Statistics data={statisticsData} />}
       </Modal.Body>
     </Modal>

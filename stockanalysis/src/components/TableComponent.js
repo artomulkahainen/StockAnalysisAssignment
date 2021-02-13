@@ -2,13 +2,13 @@ import React from 'react';
 import Table from 'react-bootstrap/Table';
 import SpinnerComponent from './SpinnerComponent';
 
-const TableComponent = ({ data }) => {
+const TableComponent = ({ data, size }) => {
   return data ? (
-    <Table striped bordered hover>
+    <Table striped bordered hover size={size}>
       <thead>
         <tr>
           {data
-            .filter((row, index) => index === 0)
+            .filter((_, index) => index === 0)
             .map((row) =>
               row.map((headline, index) => <th key={index}>{headline}</th>)
             )}
@@ -16,7 +16,7 @@ const TableComponent = ({ data }) => {
       </thead>
       <tbody>
         {data
-          .filter((row, index) => index !== 0)
+          .filter((_, index) => index !== 0)
           .map((row, index) => (
             <tr key={index}>
               {row.map((value, i) => (
